@@ -15,9 +15,7 @@ variable "project" {
   default = "fiap-lab"
 }
 
-variable "env" {
-  default = "${terraform.workspace}"
-}
+
 
 data "aws_vpc" "vpc" {
   tags = {
@@ -46,7 +44,7 @@ resource "random_shuffle" "random_subnet" {
 
 
 resource "aws_elb" "web" {
-  name = "${var.env}-hackton-elb"
+  name = "${terraform.workspace}-hackton-elb"
 
   subnets         = data.aws_subnet_ids.all.ids
   security_groups = ["${aws_security_group.allow-ssh.id}"]
@@ -100,6 +98,6 @@ resource "aws_instance" "web" {
   }
 
   tags = {
-    Name = "${format("${var.env}-nginx-hackaton-%03d", count.index + 1)}"
+    Name = "${format("${terraform.workspace}-nginx-hackaton-%03d", count.index + 1)}"
   }
 }
